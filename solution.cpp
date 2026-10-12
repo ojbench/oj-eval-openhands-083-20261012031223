@@ -12,25 +12,26 @@ struct Node {
 class CircularLinkedList {
 private:
     Node* head;
+    Node* tail;  // Keep track of tail for easier operations
     int size;
     
 public:
-    CircularLinkedList() : head(nullptr), size(0) {}
+    CircularLinkedList() : head(nullptr), tail(nullptr), size(0) {}
     
     // Build circular linked list with n nodes (1 to n)
     void buildList(int n) {
         if (n <= 0) return;
         
         head = new Node(1);
-        Node* current = head;
+        tail = head;
         
         for (int i = 2; i <= n; i++) {
-            current->next = new Node(i);
-            current = current->next;
+            tail->next = new Node(i);
+            tail = tail->next;
         }
         
         // Make it circular
-        current->next = head;
+        tail->next = head;
         size = n;
     }
     
@@ -44,6 +45,7 @@ public:
             int value = head->data;
             delete head;
             head = nullptr;
+            tail = nullptr;
             size = 0;
             return value;
         }
@@ -53,15 +55,9 @@ public:
             Node* toRemove = head;
             int value = toRemove->data;
             
-            // Find the last node to update its next pointer
-            Node* last = head;
-            while (last->next != head) {
-                last = last->next;
-            }
-            
-            // Update pointers
-            last->next = head->next;
+            // Update head and tail
             head = head->next;
+            tail->next = head;
             
             delete toRemove;
             size--;
@@ -73,7 +69,6 @@ public:
         Node* prev = head;
         
         // Move (m-2) steps to find the node before the one to be removed
-        // Since we start counting from head, we need to move m-2 steps
         for (int i = 1; i < m - 1; i++) {
             prev = prev->next;
         }
@@ -88,6 +83,11 @@ public:
         // Update head if we removed the head
         if (toRemove == head) {
             head = toRemove->next;
+        }
+        
+        // Update tail if we removed the tail
+        if (toRemove == tail) {
+            tail = prev;
         }
         
         delete toRemove;
@@ -109,8 +109,7 @@ public:
         Node* current = head;
         Node* nextNode = nullptr;
         
-        // Break the circular link to avoid infinite loop
-        // Use size to control the loop instead of comparing with head
+        // Use size to control the loop
         for (int i = 0; i < size; i++) {
             nextNode = current->next;
             delete current;
@@ -118,6 +117,7 @@ public:
         }
         
         head = nullptr;
+        tail = nullptr;
         size = 0;
     }
 };

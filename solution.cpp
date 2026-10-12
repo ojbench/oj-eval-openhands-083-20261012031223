@@ -48,7 +48,28 @@ public:
             return value;
         }
         
-        // Find the (m-1)-th node (node before the one to be removed)
+        // Special case: m = 1, remove the current head
+        if (m == 1) {
+            Node* toRemove = head;
+            int value = toRemove->data;
+            
+            // Find the last node to update its next pointer
+            Node* last = head;
+            while (last->next != head) {
+                last = last->next;
+            }
+            
+            // Update pointers
+            last->next = head->next;
+            head = head->next;
+            
+            delete toRemove;
+            size--;
+            
+            return value;
+        }
+        
+        // For m > 1, find the (m-1)-th node (node before the one to be removed)
         Node* prev = head;
         
         // Move (m-2) steps to find the node before the one to be removed

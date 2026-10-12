@@ -104,23 +104,32 @@ public:
     
     // Destructor to clean up memory
     ~CircularLinkedList() {
-        if (head == nullptr) return;
+        if (head == nullptr || size == 0) return;
         
         Node* current = head;
         Node* nextNode = nullptr;
         
         // Break the circular link to avoid infinite loop
-        do {
+        // Use size to control the loop instead of comparing with head
+        for (int i = 0; i < size; i++) {
             nextNode = current->next;
             delete current;
             current = nextNode;
-        } while (current != head);
+        }
+        
+        head = nullptr;
+        size = 0;
     }
 };
 
 int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    
     int n, m;
-    cin >> n >> m;
+    if (!(cin >> n >> m)) {
+        return 0;
+    }
     
     CircularLinkedList list;
     list.buildList(n);
@@ -128,7 +137,7 @@ int main() {
     // Simulate Josephus ring elimination
     while (!list.isEmpty()) {
         int removed = list.removeMthNode(m);
-        cout << removed << endl;
+        cout << removed << "\n";
     }
     
     return 0;

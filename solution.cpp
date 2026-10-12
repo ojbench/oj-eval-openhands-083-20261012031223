@@ -34,7 +34,7 @@ int main() {
     
     while (remaining > 0) {
         // Count m-1 steps to find the node before the one to remove
-        for (int i = 1; i < m; i++) {
+        for (int i = 0; i < m - 1; i++) {
             prev = current;
             current = current->next;
         }
